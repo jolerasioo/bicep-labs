@@ -1,0 +1,20 @@
+{
+    "parameters": {
+      "environmentName": {
+        "value": "dev"
+      },
+      "location": {
+        "value": "uksouth"
+      },
+      "sqlAdminPassword": {
+        "value": "YourSecurePasswordHere"
+      },
+      "rgBaseName": {
+        "value": "myAppResources"
+      },
+      "deploySqlDb": {
+        "value": true
+      }
+    }
+  }
+  

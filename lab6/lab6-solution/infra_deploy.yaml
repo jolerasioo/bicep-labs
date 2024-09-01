@@ -1,0 +1,67 @@
+trigger: none
+
+variables:
+- group: bicepwslib
+
+
+stages:
+  - stage: DeployToDev
+    jobs:
+      - job: LintAndDeployDev
+        displayName: 'Lint and Deploy to Dev'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: 'bicepwsServiceConnection'
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                # Install Bicep CLI
+                az bicep install
+
+                # Lint Bicep files
+                az bicep build --file main.bicep --outdir ./compiled
+
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: 'bicepwsServiceConnection'
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                # Deploy Bicep template to Dev environment
+                az deployment sub create \
+                  --template-file main.bicep \
+                  --parameters @main.bicepparam \
+                  --parameters environmentName='dev' \
+                  --parameters sqlAdminPassword=$(sqlAdminPassword)
+
+          - task: ManualValidation@0
+            inputs:
+              notifyUsers: 'user@example.com'
+              instructions: 'Please review the deployment to Dev environment and approve to continue to Prod deployment.'
+              onTimeout: 'reject'
+              timeout: '1d'
+
+
+  - stage: DeployToProd
+    dependsOn: DeployToDev
+    jobs:
+      - job: DeployProd
+        displayName: 'Deploy to Prod'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: 'bicepwsServiceConnection'
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                # Deploy Bicep template to Prod environment
+                az deployment sub create \
+                  --template-file main.bicep \
+                  --parameters @main.bicepparam \
+                  --parameters environmentName='prod' \
+                  --parameters sqlAdminPassword=$(sqlAdminPassword)
