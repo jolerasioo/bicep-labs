@@ -37,7 +37,7 @@ var rgNames = [
 targetScope = 'subscription'
 
 // Create resource groups for each environment
-resource rg 'Microsoft.Resources/resourceGroups@2022-09-01' = [for envName in envNames: {
+resource rg 'Microsoft.Resources/resourceGroups@2024-03-01' = [for envName in envNames: {
   name: '${rgBaseName}-${envName}'
   location: location
 }]
@@ -48,7 +48,7 @@ module webAppModule './modules/webApp.bicep' = [for (envName, i) in envNames: {
   scope: resourceGroup(rgNames[i])
   params: {
     environmentName: envName
-    location: location
+    location: rg[i].location
   }
 }]
 
@@ -58,8 +58,9 @@ module sqlModule './modules/sql.bicep' = [for (environmentName, i) in envNames: 
   scope: resourceGroup(rgNames[i])
   params: {
     sqlAdminPassword: sqlAdminPassword
-    location: location
+    location: rg[i].location
   }
 }]
+
 
 

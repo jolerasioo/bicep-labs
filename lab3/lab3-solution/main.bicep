@@ -17,10 +17,10 @@ param location string = resourceGroup().location
 param deploySqlDb bool = true
 
 @description('The name of the SQL Server')
-param sqlServerName string = 'mySqlServer'
+param sqlServerName string 
 
 @description('The name of the SQL Database')
-param sqlDbName string = 'mySqlDatabase'
+param sqlDbName string 
 
 @description('SQL Server admin username')
 param sqlAdminUsername string = 'sqladmin'
@@ -37,14 +37,12 @@ resource webAppPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   location: location
   sku: {
     tier: 'Standard'
-    size: 'S1'
+    name: 'S1'
   }
   properties: {
     reserved: false
   }
 }
-
-
 
 // Web App
 resource webApp 'Microsoft.Web/sites@2022-03-01' = {

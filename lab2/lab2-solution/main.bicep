@@ -29,7 +29,7 @@ resource webAppPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   location: location
   sku: {
     tier: webAppPlanSku.tier
-    size:  webAppPlanSku.size
+    name:  webAppPlanSku.size
   }
   properties: {
     reserved: isReservedAppPlan

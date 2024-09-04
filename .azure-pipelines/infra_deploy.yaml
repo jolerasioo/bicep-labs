@@ -13,20 +13,28 @@ stages:
           vmImage: 'ubuntu-latest'
         steps:
           - task: AzureCLI@2
-            displayName: Install Bicep az cli
+            displayName: Install bicep
             inputs:
-              azureSubscription: 'MCAPS-Hybrid-REQ-44911-2022-josealonso(cb72b49c-6479-4ec7-891f-f18be9ee10f2)'
+              azureSubscription: 'bicepwsServiceConnection' #edit
               scriptType: 'bash'
               scriptLocation: 'inlineScript'
               inlineScript: |
                 # Install Bicep CLI
                 az bicep install
-                
+          
+          - task: AzureCLI@2
+            displayName: Bicep linter
+            inputs:
+              azureSubscription: 'bicepwsServiceConnection' #edit
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                # Install Bicep CLI
+                az bicep install
 
           - task: AzureCLI@2
-            displayName: Deploy bicep to dev
             inputs:
-              azureSubscription: 'MCAPS-Hybrid-REQ-44911-2022-josealonso(cb72b49c-6479-4ec7-891f-f18be9ee10f2)'
+              azureSubscription: 'bicepwsServiceConnection' #edit
               scriptType: 'bash'
               scriptLocation: 'inlineScript'
               inlineScript: |
@@ -37,6 +45,11 @@ stages:
                   --parameters environmentName='dev' \
                   --parameters sqlAdminPassword=$(sqlAdminPassword)
 
+          - task: ManualValidation@1
+            inputs:
+              notifyUsers: 'user@example.com'  #edit
+              instructions: 'Please review the deployment to Dev environment and approve to continue to Prod deployment.'
+              onTimeout: 'reject'
 
 
   - stage: DeployToProd
@@ -49,7 +62,7 @@ stages:
         steps:
           - task: AzureCLI@2
             inputs:
-              azureSubscription: 'bicepwsServiceConnection'
+              azureSubscription: 'bicepwsServiceConnection' # edit 
               scriptType: 'bash'
               scriptLocation: 'inlineScript'
               inlineScript: |

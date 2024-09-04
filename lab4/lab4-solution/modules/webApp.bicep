@@ -9,15 +9,15 @@ param location string
 // Modify SKU based on environment
 var sku = environmentName == 'prod' ? {
   tier: 'Standard'
-  size: 'S2'
+  name: 'S2'
 } : {
   tier: 'Standard'
-  size: 'S1'
+  name: 'S1'
 }
 
 // App Service Plan
 resource webAppPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
-  name: 'appServicePlan-${environmentName}'
+  name: 'wasp-bicepws-${environmentName}'
   location: location
   sku: sku
   properties: {
@@ -27,7 +27,7 @@ resource webAppPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
 
 // Web App
 resource webApp 'Microsoft.Web/sites@2022-03-01' = {
-  name: 'webApp-${environmentName}'
+  name: 'wap-bicepws-${environmentName}'
   location: location
   properties: {
     serverFarmId: webAppPlan.id

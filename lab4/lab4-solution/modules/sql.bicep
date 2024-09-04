@@ -7,9 +7,10 @@ param location string
 @secure()
 param sqlAdminPassword string
 
+
 // SQL Server
 resource sqlServer 'Microsoft.Sql/servers@2022-02-01-preview' = {
-  name: 'sqlServer-${uniqueString(location)}'
+  name: 'sqlserver-${uniqueString(location)}'
   location: location
   properties: {
     administratorLogin: 'sqladmin'
@@ -20,7 +21,7 @@ resource sqlServer 'Microsoft.Sql/servers@2022-02-01-preview' = {
 // SQL Database
 resource sqlDb 'Microsoft.Sql/servers/databases@2022-02-01-preview' = {
   parent: sqlServer
-  name: 'sqlDb-${uniqueString(location)}'
+  name: 'sqldb-${uniqueString(location)}'
   location: location
   properties: {
     collation: 'SQL_Latin1_General_CP1_CI_AS'

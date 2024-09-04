@@ -8,4 +8,3 @@ param webAppPlanSku = {
 }
 param location = 'eastus'
 param isReservedAppPlan = false
-

@@ -18,13 +18,13 @@ az login
 $resourceGroupName = "myResourceGroup"
 $location = "EastUS"
 $templateFile = "main.bicep"
-$parameterFile = "parameters.bicepparams"
+$parameterFile = "main.bicepparams"
 
 # Create the resource group
 az group create --name $resourceGroupName --location $location
 
 # Deploy the Bicep template
-az deployment group create --resource-group $resourceGroupName --template-file $templateFile --parameter $parameterFile
+az deployment group create --resource-group $resourceGroupName --template-file $templateFile --parameters $parameterFile
 ```
 Or
 
